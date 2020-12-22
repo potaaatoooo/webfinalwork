@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<head>
+    <title>Title</title>
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="layui/css/layui.css">
+</head>
+<body>
+<div id="app">
+    <ul class="layui-nav" lay-filter="" style="background: #408be9;color: #ffffff">
+        <li class="layui-nav-item"><a href="">首页</a></li>
+        <li class="layui-nav-item layui-this"><a href="">商品管理</a></li>
+        <li class="layui-nav-item"><a href="">订单管理</a></li>
+        <li class="layui-nav-item"><a href="">财务管理</a></li>
+        <li class="layui-nav-item"><a href="">报关管理</a></li>
+        <li class="layui-nav-item"><a href="">数据维护</a></li>
+        <li class="layui-nav-item"><a href="">系统管理</a></li>
+        <li class="layui-nav-item"><a href="">当前用户：刘颖</a></li>
+        <li class="layui-nav-item" style="margin-left: 350px;"><a href="">武汉市海欢商贸有限公司：系统管理员</a></li>
+    </ul>
+
+<div class="layui-content">
+    <div class="layui-row">
+        <div class="layui-card">
+            <div class="layui-card-body">
+                <div class="form-box">
+                    <div class="layui-inline">
+                        <div class="layui-input-inline" style="width: 200px;">
+                            <input type="text" autocomplete="off" class="layui-input" placeholder="请输入商品货号"
+                                   v-model="goods.gid">
+                        </div>
+                        <div class="layui-input-inline" style="width: 200px;">
+                            <input type="text" autocomplete="off" class="layui-input" placeholder="请输入条形码"
+                                   v-model="goods.gbarcode">
+                        </div>
+                        <select class="layui-input-inline"  style="width: 200px;height: 32px;" v-model="goods.gsupply">
+                            <option value="" >--所有公司--</option>
+                            <option value="武汉市海欢商贸有限公司">武汉市海欢商贸有限公司</option>
+                            <option value="上海市海欢商贸有限公司">上海市海欢商贸有限公司</option>
+                        </select>
+                    </div>
+
+                    <button class="layui-btn layui-btn-blue" style="margin-left: 50px;" @click="query(1,5)"><i
+                            class="layui-icon">&#xe615;</i>查询
+                    </button>
+                    <button class="layui-btn layui-btn-danger" @click="resetSelector"><i
+                            class="layui-icon">&#x1006;</i>重置
+                    </button>
+
+
+                    <table id="demo" lay-filer="demo"></table>
+                    <div id="test1"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</body>
+<script src="layui/layui.all.js"></script>
+<script src="static/js/vue.min.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    var app =new Vue({
+        el:"#app",
+        data:{
+            goods:{},
+            total:0,
+            flag:0
+        },
+        methods:{
+            resetSelector: function () {
+                this.goods = {}
+                var pageNum = $(".layui-laypage-skip .layui-input").val();
+                var pageSize = $(".layui-laypage-limits").find("option:selected").val()
+                this.query(pageNum, pageSize);
+            },
+            query(pageNum, pageSize) {
+                var that = this;
+                axios.post("getGoods.do?pageNum=" + pageNum + "&pageSize=" + pageSize,this.goods).then(function (response) {
+                    var goodsList = response.data.extend.goodsList.list
+                    that.total = response.data.extend.goodsList.total;
+                    var table = layui.table;
+                    table.render({
+                        id: "table1"
+                        , elem: '#demo'
+                        , cols: [[ //标题栏
+                            {type: 'checkbox', title: '选中', field: 'id'}
+                            , {field: 'gid', title: '商品货号'}
+                            , {field: 'gbarcode', title: '条形码'}
+                            , {field: 'gname', title: '商品名称'}
+                            , {field: 'gclass1', title: '一级分类'}
+                            , {
+                                field: 'gclass2',title:'二级分类'
+                            }
+                            , {
+                                field: 'gprimprice', title: '供货价格'
+                            }
+                            , {field: 'glowestprice', title: '最低销售价格'}
+                            , {
+                                field: 'gadprice', title: '推荐销售价格'}
+                            , {field: 'gspeci', title: '商品规格'}
+                            , {field: 'gorigin', title: '商品产地'}
+                            , {field: 'gunit', title: '计量单位'}
+                            , {field: 'gsupply', title: '商品提供企业'}
+                            , {field: 'gstatus', title: '审核状态'}
+                        ]]
+                        , data: goodsList
+                        , skin: 'line' //表格风格
+                        , even: true
+                        , limit: 15
+                    });
+
+                    var count = $(".layui-laypage-count").text().substring(1, $(".layui-laypage-count").text().length - 1);
+                    if (that.flag == 0 || count != that.total) {
+                        that.flag = 1;
+                        that.pagePart();
+
+                    }
+                }, function (error) {
+                    console.log(error);
+                })
+            },
+            pagePart() {
+                var laypage = layui.laypage;
+                var that = this;
+                laypage.render({
+                    elem: 'test1' //注意，这里的 test1 是 ID，不用加 # 号
+                    , count: that.total //数据总数，从服务端得到
+                    , limit: 5
+                    , groups: 3
+                    , limits: [5, 10, 15]
+                    , first: '首页'
+                    , last: '尾页'
+                    , layout: ['count', 'prev', 'page', 'next', 'limit', 'skip']
+                    , jump: function (obj, first) {
+                        if (!first) {
+                            that.query(obj.curr, obj.limit);
+                        }
+                    }
+                });
+            },
+
+
+        },
+        created(){
+            this.query(1,5)
+            this.goods.gsupply="";
+        },
+    })
+</script>
+</html>

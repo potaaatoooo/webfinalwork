@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ly.dao.GoodsMapper">
+  <resultMap id="BaseResultMap" type="com.ly.bean.Goods">
+    <id column="GID" jdbcType="VARCHAR" property="gid" />
+    <result column="GBarCode" jdbcType="VARCHAR" property="gbarcode" />
+    <result column="GName" jdbcType="VARCHAR" property="gname" />
+    <result column="GClass1" jdbcType="VARCHAR" property="gclass1" />
+    <result column="GClass2" jdbcType="VARCHAR" property="gclass2" />
+    <result column="GPrimPrice" jdbcType="DECIMAL" property="gprimprice" />
+    <result column="GLowestPrice" jdbcType="DECIMAL" property="glowestprice" />
+    <result column="GAdPrice" jdbcType="DECIMAL" property="gadprice" />
+    <result column="GSpeci" jdbcType="VARCHAR" property="gspeci" />
+    <result column="GOrigin" jdbcType="VARCHAR" property="gorigin" />
+    <result column="GUnit" jdbcType="VARCHAR" property="gunit" />
+    <result column="GSupply" jdbcType="VARCHAR" property="gsupply" />
+    <result column="GStatus" jdbcType="VARCHAR" property="gstatus" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    GID, GBarCode, GName, GClass1, GClass2, GPrimPrice, GLowestPrice, GAdPrice, GSpeci, 
+    GOrigin, GUnit, GSupply, GStatus
+  </sql>
+  <select id="selectByExample" parameterType="com.ly.bean.GoodsExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from goods
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from goods
+    where GID = #{gid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from goods
+    where GID = #{gid,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.ly.bean.GoodsExample">
+    delete from goods
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.ly.bean.Goods">
+    insert into goods (GID, GBarCode, GName, 
+      GClass1, GClass2, GPrimPrice, 
+      GLowestPrice, GAdPrice, GSpeci, 
+      GOrigin, GUnit, GSupply, 
+      GStatus)
+    values (#{gid,jdbcType=VARCHAR}, #{gbarcode,jdbcType=VARCHAR}, #{gname,jdbcType=VARCHAR}, 
+      #{gclass1,jdbcType=VARCHAR}, #{gclass2,jdbcType=VARCHAR}, #{gprimprice,jdbcType=DECIMAL}, 
+      #{glowestprice,jdbcType=DECIMAL}, #{gadprice,jdbcType=DECIMAL}, #{gspeci,jdbcType=VARCHAR}, 
+      #{gorigin,jdbcType=VARCHAR}, #{gunit,jdbcType=VARCHAR}, #{gsupply,jdbcType=VARCHAR}, 
+      #{gstatus,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ly.bean.Goods">
+    insert into goods
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="gid != null">
+        GID,
+      </if>
+      <if test="gbarcode != null">
+        GBarCode,
+      </if>
+      <if test="gname != null">
+        GName,
+      </if>
+      <if test="gclass1 != null">
+        GClass1,
+      </if>
+      <if test="gclass2 != null">
+        GClass2,
+      </if>
+      <if test="gprimprice != null">
+        GPrimPrice,
+      </if>
+      <if test="glowestprice != null">
+        GLowestPrice,
+      </if>
+      <if test="gadprice != null">
+        GAdPrice,
+      </if>
+      <if test="gspeci != null">
+        GSpeci,
+      </if>
+      <if test="gorigin != null">
+        GOrigin,
+      </if>
+      <if test="gunit != null">
+        GUnit,
+      </if>
+      <if test="gsupply != null">
+        GSupply,
+      </if>
+      <if test="gstatus != null">
+        GStatus,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="gid != null">
+        #{gid,jdbcType=VARCHAR},
+      </if>
+      <if test="gbarcode != null">
+        #{gbarcode,jdbcType=VARCHAR},
+      </if>
+      <if test="gname != null">
+        #{gname,jdbcType=VARCHAR},
+      </if>
+      <if test="gclass1 != null">
+        #{gclass1,jdbcType=VARCHAR},
+      </if>
+      <if test="gclass2 != null">
+        #{gclass2,jdbcType=VARCHAR},
+      </if>
+      <if test="gprimprice != null">
+        #{gprimprice,jdbcType=DECIMAL},
+      </if>
+      <if test="glowestprice != null">
+        #{glowestprice,jdbcType=DECIMAL},
+      </if>
+      <if test="gadprice != null">
+        #{gadprice,jdbcType=DECIMAL},
+      </if>
+      <if test="gspeci != null">
+        #{gspeci,jdbcType=VARCHAR},
+      </if>
+      <if test="gorigin != null">
+        #{gorigin,jdbcType=VARCHAR},
+      </if>
+      <if test="gunit != null">
+        #{gunit,jdbcType=VARCHAR},
+      </if>
+      <if test="gsupply != null">
+        #{gsupply,jdbcType=VARCHAR},
+      </if>
+      <if test="gstatus != null">
+        #{gstatus,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.ly.bean.GoodsExample" resultType="java.lang.Long">
+    select count(*) from goods
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update goods
+    <set>
+      <if test="record.gid != null">
+        GID = #{record.gid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.gbarcode != null">
+        GBarCode = #{record.gbarcode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.gname != null">
+        GName = #{record.gname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.gclass1 != null">
+        GClass1 = #{record.gclass1,jdbcType=VARCHAR},
+      </if>
+      <if test="record.gclass2 != null">
+        GClass2 = #{record.gclass2,jdbcType=VARCHAR},
+      </if>
+      <if test="record.gprimprice != null">
+        GPrimPrice = #{record.gprimprice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.glowestprice != null">
+        GLowestPrice = #{record.glowestprice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.gadprice != null">
+        GAdPrice = #{record.gadprice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.gspeci != null">
+        GSpeci = #{record.gspeci,jdbcType=VARCHAR},
+      </if>
+      <if test="record.gorigin != null">
+        GOrigin = #{record.gorigin,jdbcType=VARCHAR},
+      </if>
+      <if test="record.gunit != null">
+        GUnit = #{record.gunit,jdbcType=VARCHAR},
+      </if>
+      <if test="record.gsupply != null">
+        GSupply = #{record.gsupply,jdbcType=VARCHAR},
+      </if>
+      <if test="record.gstatus != null">
+        GStatus = #{record.gstatus,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update goods
+    set GID = #{record.gid,jdbcType=VARCHAR},
+      GBarCode = #{record.gbarcode,jdbcType=VARCHAR},
+      GName = #{record.gname,jdbcType=VARCHAR},
+      GClass1 = #{record.gclass1,jdbcType=VARCHAR},
+      GClass2 = #{record.gclass2,jdbcType=VARCHAR},
+      GPrimPrice = #{record.gprimprice,jdbcType=DECIMAL},
+      GLowestPrice = #{record.glowestprice,jdbcType=DECIMAL},
+      GAdPrice = #{record.gadprice,jdbcType=DECIMAL},
+      GSpeci = #{record.gspeci,jdbcType=VARCHAR},
+      GOrigin = #{record.gorigin,jdbcType=VARCHAR},
+      GUnit = #{record.gunit,jdbcType=VARCHAR},
+      GSupply = #{record.gsupply,jdbcType=VARCHAR},
+      GStatus = #{record.gstatus,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ly.bean.Goods">
+    update goods
+    <set>
+      <if test="gbarcode != null">
+        GBarCode = #{gbarcode,jdbcType=VARCHAR},
+      </if>
+      <if test="gname != null">
+        GName = #{gname,jdbcType=VARCHAR},
+      </if>
+      <if test="gclass1 != null">
+        GClass1 = #{gclass1,jdbcType=VARCHAR},
+      </if>
+      <if test="gclass2 != null">
+        GClass2 = #{gclass2,jdbcType=VARCHAR},
+      </if>
+      <if test="gprimprice != null">
+        GPrimPrice = #{gprimprice,jdbcType=DECIMAL},
+      </if>
+      <if test="glowestprice != null">
+        GLowestPrice = #{glowestprice,jdbcType=DECIMAL},
+      </if>
+      <if test="gadprice != null">
+        GAdPrice = #{gadprice,jdbcType=DECIMAL},
+      </if>
+      <if test="gspeci != null">
+        GSpeci = #{gspeci,jdbcType=VARCHAR},
+      </if>
+      <if test="gorigin != null">
+        GOrigin = #{gorigin,jdbcType=VARCHAR},
+      </if>
+      <if test="gunit != null">
+        GUnit = #{gunit,jdbcType=VARCHAR},
+      </if>
+      <if test="gsupply != null">
+        GSupply = #{gsupply,jdbcType=VARCHAR},
+      </if>
+      <if test="gstatus != null">
+        GStatus = #{gstatus,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where GID = #{gid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ly.bean.Goods">
+    update goods
+    set GBarCode = #{gbarcode,jdbcType=VARCHAR},
+      GName = #{gname,jdbcType=VARCHAR},
+      GClass1 = #{gclass1,jdbcType=VARCHAR},
+      GClass2 = #{gclass2,jdbcType=VARCHAR},
+      GPrimPrice = #{gprimprice,jdbcType=DECIMAL},
+      GLowestPrice = #{glowestprice,jdbcType=DECIMAL},
+      GAdPrice = #{gadprice,jdbcType=DECIMAL},
+      GSpeci = #{gspeci,jdbcType=VARCHAR},
+      GOrigin = #{gorigin,jdbcType=VARCHAR},
+      GUnit = #{gunit,jdbcType=VARCHAR},
+      GSupply = #{gsupply,jdbcType=VARCHAR},
+      GStatus = #{gstatus,jdbcType=VARCHAR}
+    where GID = #{gid,jdbcType=VARCHAR}
+  </update>
+</mapper>
